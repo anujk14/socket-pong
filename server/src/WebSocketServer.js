@@ -37,7 +37,7 @@ class WebSocketServer {
     });
 
     socket.on('close', function close() {
-      console.log("Closing connection to client " + socket.id)
+      console.log(`Closing connection to client ${socket.id}`)
     })
   }
 
