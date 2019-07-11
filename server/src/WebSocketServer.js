@@ -1,5 +1,18 @@
 const WebSocket = require('ws');
 
+/*
+  Class which provides functionality to create web sockets.
+  This class basically acts as a wrapper around external libraries which provide socket capabilities
+  Usage:
+  constructor:
+    var myServer = new WebSocketServer(httpServerObject, pingInterval, maxMissedHeartbeats)
+    httpServerObject: An HTTP server object which the web socket would bind to
+    pingInterval: Integer denoting the milliseconds at which a heartbeat would be sent to the client. Has a default value of 500.
+    maxMissedHeartbeats: Integer denoting the number of heartbeats which, if the client does not respond to, it will be terminated. Has a default value of 10.
+
+  getClients():
+    Instance method to get a list of client ids, which are connected to the server currently.
+*/
 class WebSocketServer {
   constructor(httpServer, pingInterval=500, maxMissedHeartbeats=10) {
     this.wss = new WebSocket.Server({
@@ -43,7 +56,7 @@ class WebSocketServer {
 
   _getUniqueID() {
     function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
     return s4() + s4() + '-' + s4();
   }
@@ -51,11 +64,11 @@ class WebSocketServer {
   _ping() {
     this.wss.clients.forEach(function each(socket){
       if(socket.notReceivedPong == this.wss.maxMissedHeartbeats) {
-          console.log(`Disconnecting client ${socket.id} as it has't responded with a pong since ${this.wss.maxMissedHeartbeats} heartbeats`);
-          socket.terminate();
+        console.log(`Disconnecting client ${socket.id} as it has't responded with a pong since ${this.wss.maxMissedHeartbeats} heartbeats`);
+        socket.terminate();
       } else {
-          socket.send("PING");
-          socket.notReceivedPong += 1;
+        socket.send("PING");
+        socket.notReceivedPong += 1;
       }
     }.bind(this));
   }
