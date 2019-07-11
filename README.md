@@ -2,8 +2,8 @@
 This contains a sample project consisting of a Node.js server and a client, which connect via websockets. The server sends "PING" messages to the client over the socket and the client is expected to respond with "PONG" messages to the server to keep the connection alive.
 
 ## Requirements
-[Node.js](https://nodejs.org/en/)
-[npm](https://www.npmjs.com/)
+- [Node.js](https://nodejs.org/en/)
+- [npm](https://www.npmjs.com/)
 
 ## Directory structure
 
