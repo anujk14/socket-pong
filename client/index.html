@@ -1,0 +1,42 @@
+<html>
+  <script>
+    var sendData = true;
+
+    function openConnection() {
+      return new WebSocket(`ws://0.0.0.0:8000`);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const myWebSocket = openConnection();
+
+      myWebSocket.onopen = (event) => {
+        console.log("Connection is open");
+      }
+
+      myWebSocket.onmessage = function(event) {
+        if(event.data == "PING" && !!sendData) {
+          myWebSocket.send("PONG");
+        }
+
+        var msg = JSON.parse(JSON.stringify(event.data)) + "<br/>";
+        document.getElementById("log").innerHTML += msg
+      }
+
+      myWebSocket.onclose = function(event) {
+        document.getElementById("log").innerHTML += " CLOSED!"
+      }
+    });
+
+    function stopPonging() {
+      sendData = false;
+      document.getElementById("log").innerHTML += "Connection will close after 10 pings(5 seconds)<br/>"
+    }
+
+
+  </script>
+
+  <body>
+    <div id="log"><div>
+    <button onclick="stopPonging()">Stop ponging!</button>
+  </body>
+</html>
