@@ -7,9 +7,7 @@ class WebSocketServer {
       clientTracking: true
     });
     this.wss.maxMissedHeartbeats = maxMissedHeartbeats;
-
     this.wss.on('connection', this._onConnection.bind(this));
-
     setInterval(function() {
       this._ping.bind(this);
       this._ping();
@@ -21,26 +19,25 @@ class WebSocketServer {
     this.wss.clients.forEach(function (client){
       clients.push(client.id);
     });
-
     return clients;
   }
 
   // Region: Private methods
-  
+
   _onConnection(socket) {
     socket.id = this._getUniqueID();
     socket.notReceivedPong = 0;
 
-    socket.on('message', function incoming(message) {
-      console.log(`Received ${message} from ${this.id}`);
+    console.log(`${socket.id} connected successfully`)
 
-      if(message == "pong") {
+    socket.on('message', function incoming(message) {
+      if(message.toUpperCase() == "PONG") {
         socket.notReceivedPong = 0;
       }
     });
 
     socket.on('close', function close() {
-      console.log("Closing client: " + socket.id)
+      console.log("Closing connection to client " + socket.id)
     })
   }
 
@@ -54,10 +51,10 @@ class WebSocketServer {
   _ping() {
     this.wss.clients.forEach(function each(socket){
       if(socket.notReceivedPong == this.wss.maxMissedHeartbeats) {
-          console.log("Disconnecting " + socket.id + "....");
+          console.log(`Disconnecting client ${socket.id} as it has't responded with a pong since ${this.wss.maxMissedHeartbeats} heartbeats`);
           socket.terminate();
       } else {
-          socket.send("ping");
+          socket.send("PING");
           socket.notReceivedPong += 1;
       }
     }.bind(this));
