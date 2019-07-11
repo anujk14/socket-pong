@@ -1,7 +1,7 @@
-var http = require('http');
-var WebSocketServer = require('./src/WebSocketServer');
+const http = require('http');
+const WebSocketServer = require('./src/WebSocketServer');
 
-var HTTPServer = http.createServer(function(req, res) {
+const HTTPServer = http.createServer(function(req, res) {
   res.writeHead(200, {'Content-Type': 'application/json'});
 
   clientInfo = JSON.stringify({ "ids": wss.getClients() })
